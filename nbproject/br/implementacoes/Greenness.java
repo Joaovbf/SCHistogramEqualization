@@ -46,9 +46,11 @@ public BufferedImage GreennKG(BufferedImage img) {
     
     int[] minimosLocais = this.minimosLocais(histograma);
     
-    for (int i = 0; i < minimosLocais.length; i++) {
+    System.out.print(Arrays.toString(minimosLocais));
+    
+    for (int i = 0; i < minimosLocais.length-1; i++) {
         int divisao = minimosLocais[i] + this.deveDividirEm(Arrays.copyOfRange(histograma, minimosLocais[i], minimosLocais[i+1]));
-        if (divisao != 0) {
+        if (divisao != minimosLocais[i]) {
             int[] novos = new int[minimosLocais.length+1];
             for (int j = 0; j < novos.length; j++) {
                 if(divisao == 0)
@@ -63,27 +65,25 @@ public BufferedImage GreennKG(BufferedImage img) {
             minimosLocais = novos;
         }
     }
-    
-    int[][] niveis = new int[minimosLocais.length][256];
-    
-    for (int i = 0; i < minimosLocais.length-1; i++) {
-        niveis[i] = this.equalizacao(Arrays.copyOfRange(histograma, minimosLocais[i], minimosLocais[i+1]));
-    }
-    
+   
     int[] novoHistograma = new int[histograma.length];
     int qtd = 0;
-    for (int[] nivel : niveis) {
-        for (int item : nivel) {
-            novoHistograma[qtd] = item;
+    for (int i = 0; i < minimosLocais.length-1; i++) {
+        int[] niveis = this.equalizacao(Arrays.copyOfRange(histograma, minimosLocais[i], minimosLocais[i+1]));
+        for (int nivel : niveis) {
+            novoHistograma[qtd] = minimosLocais[i]+nivel;
             qtd++;
         }
     }
-    
-    System.out.print(novoHistograma.toString());
+    System.out.print(Arrays.toString(novoHistograma));
     
     for (int i = 0; i < res.getWidth(); i++) {
         for (int j = 0; j < res.getHeight(); j++) {
+            Color cor = new Color(res.getRGB(i, j));
+            int novoNivel = novoHistograma[cor.getRed()];
+            cor = new Color(novoNivel,novoNivel,novoNivel);
             
+            res.setRGB(i, j, cor.getRGB());
         }
     }
     return res;
@@ -184,10 +184,10 @@ private int[] normatizacao(int[] histograma){
     }
     
     //normatização
-    int novoNivel;
+    float novoNivel;
     for (i = min; i < max; i++) {
-        novoNivel = ((i-min)/(max-min))*255;
-        normatizado[novoNivel] = histograma[i];
+        novoNivel = (((float)(i-min))/(max-min))*255;
+        normatizado[Math.round(novoNivel)] = histograma[i];
     }
     
     return normatizado;
@@ -230,25 +230,31 @@ private int[] minimosLocais(int[] histograma){
     ArrayList<Integer> indices = new ArrayList();
     int[] crescimentos = new int[histograma.length];
     
+    //Zero para garantir que os intervalos comecem do começo
+    indices.add(0);
     //definição dos lugares de crescimento do histograma
     crescimentos[0] = 1;
     for (int i = 1; i < histograma.length; i++) {
-        if (crescimentos[i]>=crescimentos[i-1]) 
+        if (histograma[i]>=histograma[i-1]) 
             crescimentos[i] = 1;
         else
             crescimentos[i] = 0;
     }
     
     //definição dos vales do histograma
-    int tamanhoSequenciaDecrescente = 0;
+    int sequenciaDecrescente = 0;
     for (int i = 0; i < crescimentos.length; i++) {
         if (crescimentos[i] == 0) {
-            tamanhoSequenciaDecrescente++;
+            sequenciaDecrescente++;
         }
-        else if (tamanhoSequenciaDecrescente>4) {
+        else if (sequenciaDecrescente>8) {
             indices.add(i);
+            sequenciaDecrescente = 0;
         }
     }
+    
+    //Zero para garantir que os intervalos terminem no final
+    indices.add(255);
 
     //gambiarra pra passar por cima de chatice do java
     int[] retorno = new int[indices.size()];

@@ -244,15 +244,15 @@ public class PDI_Lote extends javax.swing.JFrame {
                         // ----- APLICACAO DA TECNICA -------
                         resvariavelK = WA.GreennKG(imgvariavelK);
                         //Nome que vai no nome do arquivo para identificar técnica.
-                        Nome = "_KG";
+                        Nome = "_SCHE";
                         //SAIDA CONTENDO CAMINHO DA IMAGEM + NOME DA IMAGEM
                         String aSaida = pastaSalvar + imagevariavelK + Nome + ".png";
                         File outputFile = new File(aSaida);
                         //CHAMADA METODO KMEANS COMO PARAMETRO A IMAGEM RESULTADO 
                         canvas = new PDIKmeansGray(resvariavelK);
-                        outvariavelK = canvas.getImage();
+//                        outvariavelK = canvas.getImage();
                         //SALVA A IMAGEM
-                        ImageIO.write(outvariavelK, "png", outputFile);
+                        ImageIO.write(resvariavelK, "png", outputFile);
                     }
                 }                
             } else {
