@@ -79,7 +79,7 @@ public BufferedImage GreennKG(BufferedImage img) {
     
     for (int i = 0; i < res.getWidth(); i++) {
         for (int j = 0; j < res.getHeight(); j++) {
-            Color cor = new Color(res.getRGB(i, j));
+            Color cor = new Color(img.getRGB(i, j));
             int novoNivel = novoHistograma[cor.getRed()];
             cor = new Color(novoNivel,novoNivel,novoNivel);
             
