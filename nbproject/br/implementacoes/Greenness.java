@@ -247,7 +247,7 @@ private int[] minimosLocais(int[] histograma){
         if (crescimentos[i] == 0) {
             sequenciaDecrescente++;
         }
-        else if (sequenciaDecrescente>2) {
+        else if (sequenciaDecrescente>3) {
             indices.add(i);
             sequenciaDecrescente = 0;
         }
