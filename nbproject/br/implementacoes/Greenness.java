@@ -26,20 +26,8 @@ public class Greenness {
 public BufferedImage GreennKG(BufferedImage img, int sequenciaMin) {
     BufferedImage res = new BufferedImage(img.getWidth(), img.getHeight(), img.getType());
 
-    //Criação do 
-    int histograma[] = new int[256];
-    
-    for (int i = 0; i < histograma.length; i++) {
-        histograma[i] = 0;
-    }
-    
-    for (int i = 0; i < img.getWidth(); i++) {
-        for (int j = 0; j < img.getHeight(); j++) {
-            Color cor = new Color(img.getRGB(i, j));
-
-            histograma[cor.getRed()]++;
-        }
-    }
+    //Criação do histograma
+    int histograma[] = this.getHistogramaYCbCr(img);
     
     histograma = this.normatizacao(histograma);
             
@@ -84,8 +72,8 @@ public BufferedImage GreennKG(BufferedImage img, int sequenciaMin) {
     for (int i = 0; i < res.getWidth(); i++) {
         for (int j = 0; j < res.getHeight(); j++) {
             Color cor = new Color(img.getRGB(i, j));
-            int novoNivel = novoHistograma[cor.getRed()];
-            cor = new Color(novoNivel,novoNivel,novoNivel);
+            
+            cor = this.YCbCrToRGB(cor, novoHistograma);
             
             res.setRGB(i, j, cor.getRGB());
         }
@@ -267,7 +255,74 @@ private int[] minimosLocais(int[] histograma, int sequenciaMin){
         retorno[i] = indices.get(i);
     return retorno;
 }
+
+private int[] getHistogramaYCbCr(BufferedImage imagem){
+    int[] histograma = new int[256];
     
+    for (int i = 0; i < histograma.length; i++) {
+        histograma[i] = 0;
+    }
+    for (int i = 0; i < imagem.getWidth(); i++) {
+        for (int j = 0; j < imagem.getHeight(); j++) {
+            Color cor = new Color(imagem.getRGB(i, j));
+            int vermelho = cor.getRed();
+            int azul = cor.getBlue();
+            int verde = cor.getGreen();
+            
+            int y = (int)((0.2568*vermelho + 0.5041*verde + 0.0979*azul) +16);
+            
+            histograma[y]++;
+            
+        }
+    }
+    return histograma;
+}
+    
+private int[] getHistogramaPB(BufferedImage imagem){
+    int[] histograma = new int[256];
+    
+    for (int i = 0; i < histograma.length; i++) {
+        histograma[i] = 0;
+    }
+    
+    for (int i = 0; i < imagem.getWidth(); i++) {
+        for (int j = 0; j < imagem.getHeight(); j++) {
+            Color cor = new Color(imagem.getRGB(i, j));
+
+            histograma[cor.getRed()]++;
+        }
+    }
+    
+    return histograma;
+}
+
+private Color YCbCrToRGB(Color cor, int[] histograma){
+    double corR = cor.getRed();
+    double corG = cor.getGreen();
+    double corB = cor.getBlue();
+
+
+    int nivelY = (int)((0.2568*corR + 0.5041*corG + 0.0979*corB) +16);
+    float Cr =(float)((0.4392*corR + -0.3678*corG + -0.0714*corB)+128); 
+    float Cb =(float) ((-0.1482*corR + -0.2910*corG + 0.4392*corB)+128);
+    //        	 double cor1 = nivelEqua[p.getGreen()];
+
+    int red= (int)((1.164*(histograma[nivelY] - 16)) + (1.596*(Cr - 128)));
+    int green = (int)( (1.164*(histograma[nivelY] - 16)) - (0.813*(Cr - 128)) - (0.391*(Cb - 128)));
+    int blue = (int)((1.164*(histograma[nivelY] - 16)) + (2.018*(Cb - 128)));
+
+    red = red>255 ? 255 : red;
+    red = red<0 ? 255 : red;
+    
+    green = green>255 ? 255 : green;
+    green = green<0 ? 255 : green;
+    
+    blue = blue>255 ? 255 : blue;
+    blue = blue<0 ? 255 : blue;
+
+    return new Color(red, green, blue);
+}
+
  /**
  * Essa função é a implementação da método de GreennessMin = G − min(R + B)
  * onde o R,G e B são os valores obtido da imagem
