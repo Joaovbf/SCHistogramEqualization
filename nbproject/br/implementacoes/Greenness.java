@@ -20,9 +20,10 @@ public class Greenness {
  * onde K é o valor passado pelo usuário e o R,G e B são os valores obtido da imagem
  * 
  * @param img A imagem onde o filtro será aplicado
+ * @param sequenciaMin Sequencia minima de descidas pra considerar um vale
  * @return retorna a imagem depois de aplicado o filtro
  */
-public BufferedImage GreennKG(BufferedImage img) {
+public BufferedImage GreennKG(BufferedImage img, int sequenciaMin) {
     BufferedImage res = new BufferedImage(img.getWidth(), img.getHeight(), img.getType());
 
     //Criação do 
@@ -42,10 +43,9 @@ public BufferedImage GreennKG(BufferedImage img) {
     
     histograma = this.normatizacao(histograma);
             
-    histograma = this.filtragemDoHistograma(histograma);
+    histograma = this.filtragemDoHistograma(histograma,11);
     
-    int[] minimosLocais = this.minimosLocais(histograma);
-    
+    int[] minimosLocais = this.minimosLocais(histograma, sequenciaMin);
     System.out.print(Arrays.toString(minimosLocais));
     
     for (int i = 0; i < minimosLocais.length-1; i++) {
@@ -69,7 +69,11 @@ public BufferedImage GreennKG(BufferedImage img) {
     int[] novoHistograma = new int[histograma.length];
     int qtd = 0;
     for (int i = 0; i < minimosLocais.length-1; i++) {
-        int[] niveis = this.equalizacao(Arrays.copyOfRange(histograma, minimosLocais[i], minimosLocais[i+1]));
+        int[] niveis;
+        if(minimosLocais[i+1]==255)
+            niveis = this.equalizacao(Arrays.copyOfRange(histograma, minimosLocais[i], minimosLocais[i+1]+1));
+        else
+            niveis = this.equalizacao(Arrays.copyOfRange(histograma, minimosLocais[i], minimosLocais[i+1]));
         for (int nivel : niveis) {
             novoHistograma[qtd] = minimosLocais[i]+nivel;
             qtd++;
@@ -142,6 +146,7 @@ private int deveDividirEm(int[] intervalo){
     for (int i = 0; i < intervalo.length; i++) 
         if (media+desvio < intervalo[i] || media-desvio > intervalo[i]) {
             divisao = true;
+            break;
         }
          
     int retorno = 0;
@@ -194,21 +199,21 @@ private int[] normatizacao(int[] histograma){
 }
 
 /**
- * Filtra o histograma no intuito de apresentá-lo sem grandes serrilhados o que atrapalha a percepção de vales e picos
+ * Filtra o histograma no intuito de apresentá-lo sem grandes serrilhados e mais suave.
  * 
- * @param histograma
+ * @param histograma 
+ * @param janela
  * @return histograma filtrado
  */
-private int[] filtragemDoHistograma(int[] histograma){
+private int[] filtragemDoHistograma(int[] histograma, int janela){
     int[] filtrado = new int[histograma.length];
     //atribuição das primeiras posições e das ultimas
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < janela; i++) {
         filtrado[i] = histograma[i];
         filtrado[histograma.length-1-i] = histograma[histograma.length-1-i];
     }
     
     //filtragem do histograma
-    int janela = 3;
     for (int i = janela; i < histograma.length-janela; i++) {
         int soma = 0;
         for (int j = -janela; j <= janela; j++) {
@@ -226,7 +231,7 @@ private int[] filtragemDoHistograma(int[] histograma){
  * @param histograma
  * @return minimos locais do histograma
  */
-private int[] minimosLocais(int[] histograma){
+private int[] minimosLocais(int[] histograma, int sequenciaMin){
     ArrayList<Integer> indices = new ArrayList();
     int[] crescimentos = new int[histograma.length];
     
@@ -247,13 +252,13 @@ private int[] minimosLocais(int[] histograma){
         if (crescimentos[i] == 0) {
             sequenciaDecrescente++;
         }
-        else if (sequenciaDecrescente>3) {
+        else if (sequenciaDecrescente>sequenciaMin) {
             indices.add(i);
             sequenciaDecrescente = 0;
         }
     }
     
-    //Zero para garantir que os intervalos terminem no final
+    //Valor Max para garantir que os intervalos terminem no final
     indices.add(255);
 
     //gambiarra pra passar por cima de chatice do java

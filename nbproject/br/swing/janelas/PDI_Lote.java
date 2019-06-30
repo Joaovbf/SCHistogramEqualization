@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import implementacoes.Greenness;
 import infraBasica_conflito.ManipulaArquivo;
 import interfaces.ImageInterface;
@@ -109,7 +109,7 @@ public class PDI_Lote extends javax.swing.JFrame {
 
         jLabel5.setText("Qual (s):");
 
-        tecnica01.setText("Tecnica 01");
+        tecnica01.setText("SCHE");
         tecnica01.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tecnica01ActionPerformed(evt);
@@ -140,7 +140,7 @@ public class PDI_Lote extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(CaminhoImagemOriginal)
                             .addComponent(CaminhoSaidaImagem))
                         .addGap(18, 18, 18)
@@ -155,7 +155,7 @@ public class PDI_Lote extends javax.swing.JFrame {
                                 .addComponent(jLabel5)
                                 .addGap(18, 18, 18)
                                 .addComponent(tecnica01)))
-                        .addGap(80, 210, Short.MAX_VALUE))))
+                        .addGap(80, 80, Short.MAX_VALUE))))
             .addGroup(layout.createSequentialGroup()
                 .addGap(69, 69, 69)
                 .addComponent(Processar, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -209,7 +209,13 @@ public class PDI_Lote extends javax.swing.JFrame {
     private void ProcessarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProcessarActionPerformed
         // PROCESSAMENTO         
         jLabel6.setVisible(false);
-
+        JTextField sensibilidadeVales = new JTextField();
+        JComponent[] input = new JComponent[] {
+            new JLabel("Insira a sensibilidade de criação de espaços. (0-max 255-min)"),
+            sensibilidadeVales
+        };
+        
+        JOptionPane.showConfirmDialog(mainFrame2, input, "Sensibilidade", JOptionPane.DEFAULT_OPTION);
         try {
             //VERIFICA SE O CAMINHO SELECIONADO DE IMAGEM E SAIDA EXISTEM
             jLabel6.setVisible(false);
@@ -242,11 +248,11 @@ public class PDI_Lote extends javax.swing.JFrame {
                         Greenness WA = new Greenness();
                         //IMAGEM RESULTANTE DA FORMULA
                         // ----- APLICACAO DA TECNICA -------
-                        resvariavelK = WA.GreennKG(imgvariavelK);
+                        resvariavelK = WA.GreennKG(imgvariavelK, Integer.parseInt(sensibilidadeVales.getText()));
                         //Nome que vai no nome do arquivo para identificar técnica.
                         Nome = "_SCHE";
                         //SAIDA CONTENDO CAMINHO DA IMAGEM + NOME DA IMAGEM
-                        String aSaida = pastaSalvar + imagevariavelK + Nome + ".png";
+                        String aSaida = pastaSalvar + imagevariavelK + Nome + "_" + sensibilidadeVales.getText() + ".png";
                         File outputFile = new File(aSaida);
                         //CHAMADA METODO KMEANS COMO PARAMETRO A IMAGEM RESULTADO 
                         canvas = new PDIKmeansGray(resvariavelK);
@@ -302,138 +308,6 @@ public class PDI_Lote extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(PDI_Lote.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
